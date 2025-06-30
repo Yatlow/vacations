@@ -8,7 +8,7 @@ export async function toggleFollow(state:any,setState:React.Dispatch<React.SetSt
     const followData = {
         action: state.tracked ? "delete" : "add",
         uuid: uid,
-        vacationId: id
+        vacation_id: id
     }
     try {
         const toggleFollow = await jwtAxios.post(`${config.server.url}${config.server.port}/vacations/track`, followData);

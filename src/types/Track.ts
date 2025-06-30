@@ -1,4 +1,4 @@
 export type Track={
     uid: string;
-    vacationId: string | number;
+    vacation_id: string | number;
 }

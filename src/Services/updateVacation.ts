@@ -7,23 +7,25 @@ export async function updateVacation(data: VacationType,id:number,setState:React
         myFormData.append("id", id.toString());
         myFormData.append("destination", data.destination);
         myFormData.append("description", data.description);
-        myFormData.append("start", data.start.toString());
-        myFormData.append("end", data.end.toString());
+        myFormData.append("start_time", data.start_time.toString());
+        myFormData.append("end_time", data.end_time.toString());
         myFormData.append("price", data.price);
         myFormData.append("path", config.server.imagePath);
-        const imageFile: any = data.pictureUrl[0];
-        if (imageFile && typeof data.pictureUrl != "string") {
+        const imageFile: any = data.picture_url[0];
+        if (imageFile && typeof data.picture_url != "string") {
             const destination = data.destination.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/gi, '');
             const fileExtension = imageFile.name.substring(imageFile.name.lastIndexOf('.'));
             const timestamp = Date.now();
-            myFormData.append("pictureUrl", `${destination}_${timestamp}${fileExtension}`);
+            myFormData.append("picture_url", `${destination}_${timestamp}${fileExtension}`);
             myFormData.append("image", imageFile);
         }
         try {
+            console.log(myFormData)
             await jwtAxios.put(`${config.server.url}${config.server.port}/vacations/update`, myFormData);
             setState((prev:any)=>({...prev,isEditing:false}));
             refresh();
         } catch (error: any) {
+            console.log(error)
             console.error("Server message:", error.response.data.message || "No message");
             console.error("Validation errors:", error.response.data.errors || "No additional error info");
         }

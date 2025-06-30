@@ -46,25 +46,28 @@ export default function AddVacation() {
     }
 
     async function addVacation(data: VacationType) {
+        console.log(data)
         const myFormData = new FormData();
         myFormData.append("destination", data.destination);
         myFormData.append("description", data.description);
-        myFormData.append("start", data.start_time.toString());
-        myFormData.append("end", data.end_time.toString());
+        myFormData.append("start_time", data.start_time.toString());
+        myFormData.append("end_time", data.end_time.toString());
         myFormData.append("price", data.price);
         myFormData.append("path", config.server.imagePath);
         const imageFile: any = data.picture_url[0];
         const destination = data.destination.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/gi, '');
         const fileExtension = imageFile.name.substring(imageFile.name.lastIndexOf('.'));
         const timestamp = Date.now();
-        myFormData.append("pictureUrl", `${destination}_${timestamp}${fileExtension}`);
+        myFormData.append("picture_url", `${destination}_${timestamp}${fileExtension}`);
         myFormData.append("image", imageFile);
 
-        const sendVacation = async () =>
-            await jwtAxios.post(`${config.server.url}${config.server.port}/vacations/add`, myFormData);
+        const sendVacation = async () => {
+            return await jwtAxios.post(`${config.server.url}${config.server.port}/vacations/add`, myFormData);
+        }
         try {
-            const newVacation = await sendVacation();
-            if (newVacation.data.affectedRows > 0) {
+            const newVacation: any = await sendVacation();
+            console.log(newVacation)
+            if (newVacation.data.rowCount > 0) {
                 handleSuccess();
             }
         } catch (error: any) {
@@ -83,7 +86,7 @@ export default function AddVacation() {
                         dispatch(setMsg(`${error.response.data}. logging out...`))
                     }, config.uiTimeConfig.denyAccess);
                 } else {
-                    const retry = await sendVacation()
+                    const retry: any = await sendVacation()
                     if (retry.data.affectedRows > 0) {
                         handleSuccess();
                     }

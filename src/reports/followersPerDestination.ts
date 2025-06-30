@@ -22,7 +22,7 @@ export async function followersPerDestination(
         const tracked = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/track`);
         const reportData: ReportData[] = [];
         vacations.data.forEach((vacation: VacationType) => {
-            const count = tracked.data.filter((track: Track) => track.vacationId === vacation.id)
+            const count = tracked.data.filter((track: Track) => track.vacation_id === vacation.id)
             reportData.push({
                 label: vacation.destination,
                 value: count.length

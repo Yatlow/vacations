@@ -10,6 +10,7 @@ import EditAndDeleteBox from "../EditAndDeleteBox/EditAndDeleteBox";
 import { toggleFollow } from "../../../Services/toggleFollow";
 import { updateVacation } from "../../../Services/updateVacation";
 import unknownImg from "../../../assets/images/image-not-found-icon.png"
+import axios from "axios";
 
 interface VacationProps extends VacationType {
     remountFatherComponent: () => void;
@@ -36,7 +37,7 @@ export default function Vacation(vacation: VacationProps) {
     useEffect(() => {
         async function fetchImage() {
             try {
-                const image = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/image?image=${vacation.picture_url}`,
+                const image = await axios.get(vacation.picture_url,
                     { responseType: "blob" }
                 );
                 const imageUrl = URL.createObjectURL(image.data);
@@ -53,7 +54,7 @@ export default function Vacation(vacation: VacationProps) {
                 let count = 0;
                 let isTrackedByUser = false;
                 parsed.forEach((track: Track) => {
-                    if (track.vacationId === vacation.id) {
+                    if (track.vacation_id === vacation.id) {
                         count++;
                         if (track.uid === uid) {
                             isTrackedByUser = true;
@@ -79,7 +80,7 @@ export default function Vacation(vacation: VacationProps) {
                 data: { id: vacation.id }
             });
             setState((prev)=>({...prev,showDeleteModal:false}))
-            if (deleted.data.affectedRows) {
+            if (deleted.data.rowCount) {
                 vacation.remountFatherComponent();
             }
         } catch (error) {

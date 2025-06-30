@@ -8,11 +8,8 @@ jwtAxios.interceptors.request.use(request => {
         request.headers = {
             ...request.headers,
             Authorization: "Bearer " + loginData.token,
-            role:loginData.user.role
-
         } as any;
     }
-    console.log(request)
     return request;
 });
 

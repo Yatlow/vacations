@@ -45,6 +45,8 @@ export default function VacationForm({
             Object.entries(defaultValues).forEach(([key, value]) => {
                 if (value) setValue(key as keyof VacationType, value);
             });
+            if (defaultValues.start_time) setValue("start_time", toDateInputValue(new Date(defaultValues.start_time)));
+            if (defaultValues.end_time) setValue("end_time", toDateInputValue(new Date(defaultValues.end_time)));
         }
         if (mode === "add") {
             setValue("start_time", toDateInputValue(now));

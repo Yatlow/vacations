@@ -9,7 +9,7 @@ export function applyFilters(state:any,setState:React.Dispatch<React.SetStateAct
             if (stored && tracked) {
                 const { uuid } = JSON.parse(stored);
                 const trackedArray: Track[] = JSON.parse(tracked);
-                const followedIds = trackedArray.filter(track => track.uid === uuid).map(track => track.vacationId);
+                const followedIds = trackedArray.filter(track => track.uid === uuid).map(track => track.vacation_id);
                 filtered = filtered.filter(vacation => followedIds.includes(vacation.id));
             }
         };
