@@ -4,11 +4,12 @@ import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.register(ChartDataLabels);
 import { useNavigate } from "react-router-dom";
-import type { AppDispatch } from "../../../Data/ReduxModule"; import { useDispatch } from "react-redux";
+import { setMsg, type AppDispatch } from "../../../Data/ReduxModule"; import { useDispatch } from "react-redux";
 import { followersPerDestination } from "../../../reports/followersPerDestination";
 import { vacationsPerYear } from "../../../reports/vacationsPerYear";
 import type { ReportsDisplayState } from "../../../types/ReportsDisplayState";
 import { timeAnalyses } from "../../../reports/time analyses";
+import { logout } from "../../../Services/logout";
 
 
 export default function Reports() {
@@ -23,6 +24,10 @@ export default function Reports() {
     const role = loginData.role;
 
     useEffect(() => {
+        if (role === "user") {
+            logout(navigate, dispatch);
+            dispatch(setMsg("logging out... access denied"))
+        }
         state.fetch(setState, navigate, dispatch);
         if (chartRef.current && state.data.length > 0) {
             if (chartInstance.current) chartInstance.current.destroy();
