@@ -1,4 +1,10 @@
 {
+    "compilerOptions": {
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "node"
+    },
     "homepage": "https://Yatlow.github.io/vacations",
     "name": "client",
     "private": true,
@@ -7,7 +13,7 @@
     "scripts": {
         "dev": "vite",
         "predeploy": "npm run build",
-        "deploy": "gh-pages -d build",
+        "deploy": "gh-pages -d dist",
         "build": "tsc -b && vite build",
         "lint": "eslint .",
         "preview": "vite preview"
