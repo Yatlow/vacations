@@ -15,11 +15,11 @@ export function applyFilters(state:any,setState:React.Dispatch<React.SetStateAct
         };
         if (state.future) {
             const now = new Date();
-            filtered = filtered.filter(vacation => new Date(vacation.start) > now);
+            filtered = filtered.filter(vacation => new Date(vacation.start_time) > now);
         };
         if (state.active) {
             const now = new Date();
-            filtered = filtered.filter(vac => new Date(vac.start) <= now && new Date(vac.end) >= now);
+            filtered = filtered.filter(vac => new Date(vac.start_time) <= now && new Date(vac.end_time) >= now);
         };
         setState((prev:any)=>({...prev,displayedVacations:filtered,visibleVacations:filtered.slice(0,9),paginationStart:0,paginationEnd:9}));
     }
