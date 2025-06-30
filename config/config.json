@@ -1,0 +1,14 @@
+{
+    "server":{
+        "port":"",
+        "url":"https://vacations-server-i9wv.onrender.com",
+        "imagePath":"../assets/images"
+    },
+    "uiTimeConfig":{
+        "showPassMs":2000,
+        "logoutMs":500,
+        "denyAccess":1000,
+        "logOutInactive":1800000
+    },
+    "vacationsOnPage":9
+}
