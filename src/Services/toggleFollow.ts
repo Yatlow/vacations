@@ -11,10 +11,12 @@ export async function toggleFollow(state:any,setState:React.Dispatch<React.SetSt
         vacation_id: id
     }
     try {
+        console.log(followData)
         const toggleFollow = await jwtAxios.post(`${config.server.url}${config.server.port}/vacations/track`, followData);
-        if (toggleFollow.data.affectedRows) {
+        if (toggleFollow.data.rowCount) {
             const trackingRes = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/track`);
-            localStorage.setItem("trackedData", JSON.stringify(trackingRes.data));
+            console.log(trackingRes.data.rows)
+            localStorage.setItem("trackedData", JSON.stringify(trackingRes.data.rows));
             setState((prev:any) => ({ ...prev, mounter: !state.mounter }))
         }
     } catch (error) {

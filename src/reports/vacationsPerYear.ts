@@ -16,13 +16,14 @@ export async function vacationsPerYear(
     dispatch: AppDispatch
 ) {
     const fetchAndCreateReport = async () => {
-        const vacations = await jwtAxios.get<VacationType[]>(`${config.server.url}${config.server.port}/vacations/`);
+        const result = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/`);
         const reportData:ReportData[]=[];
-        const years=Array.from(new Set(vacations.data.map(vacation => new Date(vacation.start_time).getFullYear())));
+        const vacations:VacationType[]= result.data.rows;
+        const years=Array.from(new Set(vacations.map(vacation => new Date(vacation.start_time).getFullYear())));
         years.sort((a,b)=>a+b)
         
         years.forEach((year) => {
-            const count=vacations.data.filter(vacation=>new Date (vacation.start_time).getFullYear()===year);
+            const count=vacations.filter(vacation=>new Date (vacation.start_time).getFullYear()===year);
             reportData.push({
                 label:String(year),
                 value:count.length

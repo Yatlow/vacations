@@ -17,7 +17,7 @@ export async function timeAnalyses(
 ) {
     const fetchAndCreateReport = async () => {
         const vacations = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/`);
-        const sorted = vacations.data.sort((a: any, b: any) => new Date(a.start).getTime() + new Date(b.start).getTime());
+        const sorted = vacations.data.rows.sort((a: any, b: any) => new Date(a.start).getTime() + new Date(b.start).getTime());
         const reportData: ReportData[] = [
             { label: "Previous Vacations", value: 0 },
             { label: "Ongoing Vacations", value: 0 },

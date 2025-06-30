@@ -52,8 +52,7 @@ export default function Reports() {
                                 size:10,
                                 weight: 'bold'
                             },
-                            formatter: (value, context) => {
-                                console.log(value);
+                            formatter: (_value, context) => {
                                 return context.chart.data.labels?.[context.dataIndex] || '';
                             }
                         }
