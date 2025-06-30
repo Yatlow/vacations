@@ -38,9 +38,9 @@ export default function AddVacation() {
             destination: "",
             description: "",
             price: "",
-            start: now.toISOString().split('T')[0],
-            end: tomorrow.toISOString().split('T')[0],
-            pictureUrl: ""
+            start_time: now.toISOString().split('T')[0],
+            end_time: tomorrow.toISOString().split('T')[0],
+            picture_url: ""
         });
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -49,11 +49,11 @@ export default function AddVacation() {
         const myFormData = new FormData();
         myFormData.append("destination", data.destination);
         myFormData.append("description", data.description);
-        myFormData.append("start", data.start.toString());
-        myFormData.append("end", data.end.toString());
+        myFormData.append("start", data.start_time.toString());
+        myFormData.append("end", data.end_time.toString());
         myFormData.append("price", data.price);
         myFormData.append("path", config.server.imagePath);
-        const imageFile: any = data.pictureUrl[0];
+        const imageFile: any = data.picture_url[0];
         const destination = data.destination.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/gi, '');
         const fileExtension = imageFile.name.substring(imageFile.name.lastIndexOf('.'));
         const timestamp = Date.now();
@@ -68,6 +68,7 @@ export default function AddVacation() {
                 handleSuccess();
             }
         } catch (error: any) {
+            console.log(error)
             if (error.response.data === "Your login session has expired.") {
                 const refreshed = await refreshToken();
                 if (!refreshed.success) {

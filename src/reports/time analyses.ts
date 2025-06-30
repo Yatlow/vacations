@@ -26,8 +26,8 @@ export async function timeAnalyses(
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         sorted.forEach((vacation: VacationType) => {
-            const startDate = new Date(vacation.start);
-            const endDate = new Date(vacation.end)
+            const startDate = new Date(vacation.start_time);
+            const endDate = new Date(vacation.end_time)
             startDate.setHours(0, 0, 0, 0);
             endDate.setHours(0, 0, 0, 0);
 

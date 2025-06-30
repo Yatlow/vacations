@@ -7,10 +7,12 @@ jwtAxios.interceptors.request.use(request => {
         const loginData = JSON.parse(stored)
         request.headers = {
             ...request.headers,
-            Authorization: "Bearer " + loginData.token
+            Authorization: "Bearer " + loginData.token,
+            role:loginData.user.role
+
         } as any;
     }
-
+    console.log(request)
     return request;
 });
 

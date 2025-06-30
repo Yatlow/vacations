@@ -55,7 +55,7 @@ function Header() {
                     {stored &&
                         <>
                             <div className="hamburger" onClick={() => setMenuState(!menuState)}><img src={hamburger} /></div>
-                            <div className="userName">🙍‍♂️ welcome {loginData.firstName} {loginData.familyName}</div>
+                            <div className="userName">🙍‍♂️ welcome {loginData.first_name} {loginData.family_name}</div>
                             <div className="navHome" onClick={() => { if (menuState) setMenuState(!menuState) }}><NavLink to={'/vacations'}>🏡 Home</NavLink></div>
                         </>}
                     {!stored && <div className="navBtn"><NavLink to={'/login'} className={({ isActive }) => (isActive ? "activeLink" : "")}>Login</NavLink></div>}

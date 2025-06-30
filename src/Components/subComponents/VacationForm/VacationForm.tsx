@@ -36,7 +36,7 @@ export default function VacationForm({
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const startValue = watch("start");
+    const startValue = watch("start_time");
 
 
 
@@ -47,8 +47,8 @@ export default function VacationForm({
             });
         }
         if (mode === "add") {
-            setValue("start", toDateInputValue(now));
-            setValue("end", toDateInputValue(tomorrow));
+            setValue("start_time", toDateInputValue(now));
+            setValue("end_time", toDateInputValue(tomorrow));
         }
     }, []);
 
@@ -68,7 +68,7 @@ export default function VacationForm({
                 <label>Start Date</label>
                 <input
                     type="date"
-                    {...register("start", {
+                    {...register("start_time", {
                         required: true,
                         validate: (value) => {
                             if (mode === "add") {
@@ -80,14 +80,14 @@ export default function VacationForm({
                         }
                     })}
                 />
-                {errors.start && <span>{errors.start.message || "Start date is required"}</span>}
+                {errors.start_time && <span>{errors.start_time.message || "Start date is required"}</span>}
             </div>
 
             <div>
                 <label>End Date</label>
                 <input
                     type="date"
-                    {...register("end", {
+                    {...register("end_time", {
                         required: true,
                         validate: (value) => {
                             const startDate = new Date(startValue);
@@ -98,7 +98,7 @@ export default function VacationForm({
                         }
                     })}
                 />
-                {errors.end && <span>{errors.end.message || "End date is required"}</span>}
+                {errors.end_time && <span>{errors.end_time.message || "End date is required"}</span>}
             </div>
 
             <div>
@@ -126,7 +126,7 @@ export default function VacationForm({
                 <input
                     type="file"
                     accept="image/*"
-                    {...register("pictureUrl", {
+                    {...register("picture_url", {
                         ...(fileRequired && { required: true }),
                         onChange: (e) => {
                             const file = e.target.files?.[0];
@@ -134,11 +134,11 @@ export default function VacationForm({
                         }
                     })}
                 />
-                {fileRequired && errors.pictureUrl && <span>Photo is required</span>}
+                {fileRequired && errors.picture_url && <span>Photo is required</span>}
             </div>
 
             {!fileRequired && !fileSelected && (
-                <span className="fileName">{defaultValues.pictureUrl}</span>
+                <span className="fileName">{defaultValues.picture_url}</span>
             )}
 
             <div className="form-buttons">

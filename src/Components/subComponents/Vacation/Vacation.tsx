@@ -30,13 +30,13 @@ export default function Vacation(vacation: VacationProps) {
     const loginData = stored ? JSON.parse(stored) : "";
     const role = loginData.role;
     const uid = loginData.uuid;
-    const start = new Date(vacation.start);
-    const end = new Date(vacation.end);
+    const start = new Date(vacation.start_time);
+    const end = new Date(vacation.end_time);
 
     useEffect(() => {
         async function fetchImage() {
             try {
-                const image = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/image?image=${vacation.pictureUrl}`,
+                const image = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/image?image=${vacation.picture_url}`,
                     { responseType: "blob" }
                 );
                 const imageUrl = URL.createObjectURL(image.data);

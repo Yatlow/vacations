@@ -49,7 +49,7 @@ export default function Vacations() {
 
     useEffect(() => {
         const handleGetVacationsSuccess = async (data: VacationType[]) => {
-            const sorted = data.sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+            const sorted = data.sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime());
             setState((prev) => ({
                 ...prev, followed: false, future: false, active: false,
                 allVacations: sorted, paginationStart: 0, paginationEnd: 9, displayedVacations: sorted,
@@ -57,13 +57,13 @@ export default function Vacations() {
             }));
         };
         async function fetchVacationsAndTracked() {
-            const getVacations = async () => jwtAxios.get<VacationType[]>(`${config.server.url}${config.server.port}/vacations`);
+            const getVacations = async () => jwtAxios.get(`${config.server.url}${config.server.port}/vacations`);
             const getTrackings = async () => jwtAxios.get(`${config.server.url}${config.server.port}/vacations/track`);
             try {
                 const vacationsRes = await getVacations();
-                handleGetVacationsSuccess(vacationsRes.data)
+                handleGetVacationsSuccess(vacationsRes.data.rows)
                 const trackingRes = await getTrackings();
-                localStorage.setItem("trackedData", JSON.stringify(trackingRes.data));
+                localStorage.setItem("trackedData", JSON.stringify(trackingRes.data.rows));
 
             } catch (error: any) {
                 console.log(error.message)
