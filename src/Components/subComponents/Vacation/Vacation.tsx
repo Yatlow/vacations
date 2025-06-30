@@ -9,6 +9,7 @@ import FollowBox from "../FollowBox/FollowBox";
 import EditAndDeleteBox from "../EditAndDeleteBox/EditAndDeleteBox";
 import { toggleFollow } from "../../../Services/toggleFollow";
 import { updateVacation } from "../../../Services/updateVacation";
+import unknownImg from "../../../assets/images/image-not-found-icon.png"
 
 interface VacationProps extends VacationType {
     remountFatherComponent: () => void;
@@ -42,7 +43,7 @@ export default function Vacation(vacation: VacationProps) {
                 setState((prev)=>({...prev,image:<img src={imageUrl} />}))
             } catch (error: any) {
                 console.log(error.message)
-                setState((prev)=>({...prev,image:<img src="src\assets\images\image-not-found-icon.png" />}))
+                setState((prev)=>({...prev,image:<img src={unknownImg} />}))
             }
         };
         fetchImage();

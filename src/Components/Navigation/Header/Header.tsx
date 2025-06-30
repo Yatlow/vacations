@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import { logout } from "../../../Services/logout";
 import config from "../../../../config/config.json"
+import loading from "../../../assets/images/loading.png";
+import hamburger from "../../../assets/images/hamburger.png";
 
 function Header() {
     const [menuState, setMenuState] = useState(false)
@@ -45,14 +47,14 @@ function Header() {
     return (
         <>
             {auth && <div className={modalClass}>
-                <img src="src\assets\images\loading.png" className="loadingImg" />
+                <img src={loading} />
                 <a>{msg}</a>
             </div>}
             <div className={`menu ${!stored && "notLoggedMenu"}`}>
                 <div className="hamburgerBox">
                     {stored &&
                         <>
-                            <div className="hamburger" onClick={() => setMenuState(!menuState)}><img src="src\assets\images\hamburger.png" /></div>
+                            <div className="hamburger" onClick={() => setMenuState(!menuState)}><img src={hamburger} /></div>
                             <div className="userName">🙍‍♂️ welcome {loginData.firstName} {loginData.familyName}</div>
                             <div className="navHome" onClick={() => { if (menuState) setMenuState(!menuState) }}><NavLink to={'/vacations'}>🏡 Home</NavLink></div>
                         </>}
