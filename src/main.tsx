@@ -4,11 +4,14 @@ import { Provider, useSelector } from "react-redux";
 import store, { type RootState } from "./Data/ReduxModule";
 import App from './App.tsx';
 import './main.css';
+import { HashRouter } from "react-router-dom";
 
 function AppWithKey() {
     const isAuthenticated = useSelector((state: RootState) => state);
     if (!isAuthenticated) localStorage.clear();
-    return <App key={isAuthenticated ? "true" : "false"} />;
+    return (<HashRouter>
+        <App key={isAuthenticated ? "true" : "false"} />;
+    </HashRouter>)
 }
 
 
