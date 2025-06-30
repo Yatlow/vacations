@@ -9,9 +9,11 @@ import { HashRouter } from "react-router-dom";
 function AppWithKey() {
     const isAuthenticated = useSelector((state: RootState) => state);
     if (!isAuthenticated) localStorage.clear();
-    return (<HashRouter>
-        <App key={isAuthenticated ? "true" : "false"} />;
-    </HashRouter>)
+    return (
+        <HashRouter>
+            <App key={isAuthenticated ? "true" : "false"} />;
+        </HashRouter>
+    )
 }
 
 
