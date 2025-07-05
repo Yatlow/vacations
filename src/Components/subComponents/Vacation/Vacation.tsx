@@ -1,4 +1,4 @@
-import { useEffect, useState, type JSX } from "react";
+import { useEffect, useState } from "react";
 import config from "../../../../config/config.json";
 import jwtAxios from "../../../Services/JwtAxios";
 import { useForm } from "react-hook-form";

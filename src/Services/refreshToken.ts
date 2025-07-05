@@ -1,6 +1,5 @@
 import axios from "axios";
 import config from "../../config/config.json"
-import jwtAxios from "./JwtAxios";
 
 export async function refreshToken(){
     const stored = localStorage.getItem("loginData");
