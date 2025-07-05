@@ -50,26 +50,19 @@ export async function followersPerDestination(
                 loading: false
             }));
         }
-        if (err.response.data === "Your login session has expired.") {
-            const refreshed = await refreshToken();
-            if (!refreshed.success) {
+        const status = err.response?.status;
+        if (status === 401 || status === 403) {
+            const result = await refreshToken();
+            if (result.success) {
+                await fetchAndCreateReport();
+            } else {
                 setTimeout(() => {
                     logout(navigate, dispatch);
                     dispatch(setMsg(`${msg}. logging out`));
                     fail();
                 }, config.uiTimeConfig.denyAccess);
-            } else {
-                try {
-                    await fetchAndCreateReport();
-                } catch (error) {
-                    fail();
-                }
+                return;
             }
-        }
-        else if (msg === "You are not logged-in.") {
-            setTimeout(() => logout(navigate, dispatch), config.uiTimeConfig.denyAccess);
-            dispatch(setMsg(`${msg}. logging out...`));
-            fail();
         }
         else {
             fail();

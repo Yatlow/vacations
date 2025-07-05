@@ -4,12 +4,14 @@ import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 Chart.register(ChartDataLabels);
 import { useNavigate } from "react-router-dom";
-import { setMsg, type AppDispatch } from "../../../Data/ReduxModule"; import { useDispatch } from "react-redux";
+import { setMsg, type AppDispatch } from "../../../Data/ReduxModule";
+import { useDispatch } from "react-redux";
 import { followersPerDestination } from "../../../reports/followersPerDestination";
 import { vacationsPerYear } from "../../../reports/vacationsPerYear";
 import type { ReportsDisplayState } from "../../../types/ReportsDisplayState";
 import { timeAnalyses } from "../../../reports/time analyses";
 import { logout } from "../../../Services/logout";
+import loading from "../../../assets/images/loading.png";
 
 
 export default function Reports() {
@@ -51,10 +53,10 @@ export default function Reports() {
                             display: false
                         },
                         datalabels: {
-                            display:state.reportType === "doughnut" ,
+                            display: state.reportType === "doughnut",
                             color: '#773d1c',
                             font: {
-                                size:10,
+                                size: 10,
                                 weight: 'bold'
                             },
                             formatter: (_value, context) => {
@@ -78,7 +80,7 @@ export default function Reports() {
                         <div>
                             {state.loading &&
                                 <div className="reportsLoadingBox">
-                                    <img src="src/assets/images/loading.png" className="loadingImg" />
+                                    <img src={loading} className="loadingImg" />
                                     <a>loading...</a>
                                 </div>}
                             <div>

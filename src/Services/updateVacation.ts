@@ -1,6 +1,7 @@
 import type { VacationType } from "../types/VacationType";
 import config from "../../config/config.json";
 import jwtAxios from "./JwtAxios";
+import { refreshToken } from "./refreshToken";
 
 export async function updateVacation(data: VacationType,id:number,setState:React.Dispatch<React.SetStateAction<any>>,refresh:Function) {
         const myFormData = new FormData();
@@ -25,9 +26,20 @@ export async function updateVacation(data: VacationType,id:number,setState:React
             setState((prev:any)=>({...prev,isEditing:false}));
             refresh();
         } catch (error: any) {
-            console.log(error)
-            console.error("Server message:", error.response.data.message || "No message");
-            console.error("Validation errors:", error.response.data.errors || "No additional error info");
+        const status = error.response?.status;
+        if (status === 401 || status === 403) {
+            const result = await refreshToken();
+            if (result.success) {
+                await jwtAxios.put(`${config.server.url}${config.server.port}/vacations/update`, myFormData);
+                setState((prev: any) => ({ ...prev, isEditing: false }));
+                refresh();
+                return;
+            } else {
+                console.error("Server message:", error.response.data.message || "No message");
+                console.error("Validation errors:", error.response.data.errors || "No additional error info");
+                return;
+            }
         }
+    }
 
     }

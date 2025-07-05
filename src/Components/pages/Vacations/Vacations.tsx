@@ -11,6 +11,7 @@ import { logout } from "../../../Services/logout";
 import { handlePagination } from "../../../Services/handlePagination";
 import { applyFilters } from "../../../Services/applyFilters";
 import { refreshToken } from "../../../Services/refreshToken";
+import LoadingBox from "../../subComponents/LoadingBox/LoadingBox";
 
 interface VacationsState {
     allVacations: VacationType[],
@@ -24,6 +25,7 @@ interface VacationsState {
     refresh: boolean,
     err: boolean,
     errInfo: any,
+    loading:boolean
 };
 
 export default function Vacations() {
@@ -40,7 +42,8 @@ export default function Vacations() {
         refresh: false,
         errInfo: "",
         paginationStart: 0,
-        paginationEnd: 9
+        paginationEnd: 9,
+        loading:true
     });
     const stored = localStorage.getItem("loginData");
     const loginData = stored ? JSON.parse(stored) : "";
@@ -53,7 +56,7 @@ export default function Vacations() {
             setState((prev) => ({
                 ...prev, followed: false, future: false, active: false,
                 allVacations: sorted, paginationStart: 0, paginationEnd: 9, displayedVacations: sorted,
-                visibleVacations: sorted.slice(0, 9)
+                visibleVacations: sorted.slice(0, 9),loading:false
             }));
         };
         async function fetchVacationsAndTracked() {
@@ -65,39 +68,30 @@ export default function Vacations() {
                 const trackingRes = await getTrackings();
                 localStorage.setItem("trackedData", JSON.stringify(trackingRes.data.rows));
 
-            } catch (error: any) {
-                console.log(error.message)
+            }  catch (error: any) {
                 console.log(error)
-                const msg = error.response?.data ? error.response.data : error.message;
-
-                if (error.response.data === "Your login session has expired.") {                    
-                    const refreshed = await refreshToken();
-                    if (!refreshed.success) {
-                        setTimeout(() => {
-                            logout(navigate, dispatch);
-                            dispatch(setMsg(`${msg}. logging out`));
-                            setState((prev) => ({ ...prev, err: true, errInfo: msg }));
-                        }, config.uiTimeConfig.denyAccess);
-                    } else if (state.allVacations.length < 1) {
-                        const retry = await getVacations()
+                const status = error.response?.status;
+                if (status === 401 || status === 403) {
+                    const result = await refreshToken();
+                    if (result.success) {
+                        const retry = await getVacations();
                         if (retry.data.length > 0) {
                             await handleGetVacationsSuccess(retry.data);
+                            const trackingRes = await getTrackings();
+                            localStorage.setItem("trackedData", JSON.stringify(trackingRes.data));
                         }
+                        return;
                     } else {
-                        const trackingRes = await getTrackings();
-                        localStorage.setItem("trackedData", JSON.stringify(trackingRes.data));
+                        setTimeout(() => {
+                            logout(navigate, dispatch);
+                            dispatch(setMsg(result.msg || "Session expired – logging out"));
+                            const msg = error.response?.data ? error.response.data : error.message;
+                            setState((prev) => ({ ...prev, err: true, errInfo: msg ,loading:false}));
+                        }, config.uiTimeConfig.denyAccess);
+                        return;
                     }
                 }
-                if (msg === "You are not logged-in.") {
-                    setState((prev) => ({ ...prev, err: true, errInfo: msg }));
-                    setTimeout(() => {
-                        logout(navigate, dispatch)
-                        dispatch(setMsg(`${msg}. logging out`))
-
-                    }, config.uiTimeConfig.denyAccess);
-                }
             }
-
         };
         fetchVacationsAndTracked();
     }, [state.refresh]);
@@ -106,6 +100,7 @@ export default function Vacations() {
     return (
         <>
             <div className="componentBox">
+                {state.loading && <LoadingBox/>}
                 <h1>Our Vacations!</h1>
                 {state.err && <div className="fail">{state.errInfo}</div>}
                 <div className="sortBox">

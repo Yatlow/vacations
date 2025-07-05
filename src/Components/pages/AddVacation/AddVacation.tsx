@@ -10,12 +10,12 @@ import { logout } from "../../../Services/logout";
 import VacationForm from "../../subComponents/VacationForm/VacationForm";
 import { setMsg } from "../../../Data/ReduxModule";
 import { refreshToken } from "../../../Services/refreshToken";
-
+import LoadingBox from "../../subComponents/LoadingBox/LoadingBox";
 
 export default function AddVacation() {
     const formMethods = useForm<VacationType>();
     const { reset } = formMethods;
-    const [state, setState] = useState({ msg: "", class: "" });
+    const [state, setState] = useState({ msg: "", class: "", loading: false });
 
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
@@ -33,7 +33,7 @@ export default function AddVacation() {
         }
     }, [role]);
     function handleSuccess() {
-        setState({ msg: "successfully added!", class: "success" });
+        setState({ msg: "successfully added!", class: "success", loading: false });
         reset({
             destination: "",
             description: "",
@@ -46,7 +46,6 @@ export default function AddVacation() {
     }
 
     async function addVacation(data: VacationType) {
-        console.log(data)
         const myFormData = new FormData();
         myFormData.append("destination", data.destination);
         myFormData.append("description", data.description);
@@ -62,68 +61,35 @@ export default function AddVacation() {
         myFormData.append("image", imageFile);
 
         const sendVacation = async () => {
+            setState((prevState) => ({ ...prevState, loading: true }));
             return await jwtAxios.post(`${config.server.url}${config.server.port}/vacations/add`, myFormData);
         }
         try {
             const newVacation: any = await sendVacation();
-            console.log(newVacation)
             if (newVacation.data.rowCount > 0) {
                 handleSuccess();
             }
         } catch (error: any) {
-            console.log(error)
-            if (error.response.data === "Your login session has expired.") {
-                const refreshed = await refreshToken();
-                if (!refreshed.success) {
-                    setState({
-                        msg: refreshed.msg,
-                        class: "fail"
-                    });
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                    setTimeout(() => {
-                        console.log(error.response)
-                        logout(navigate, dispatch);
-                        dispatch(setMsg(`${error.response.data}. logging out...`))
-                    }, config.uiTimeConfig.denyAccess);
+            const status = error.response?.status;
+            if (status === 401 || status === 403) {
+                const result = await refreshToken();
+                if (result.success) {
+                    const retry = await sendVacation();
+                    if (retry.data.rowCount > 0) handleSuccess();
+                    return;
                 } else {
-                    const retry: any = await sendVacation()
-                    if (retry.data.affectedRows > 0) {
-                        handleSuccess();
-                    }
-                }
-            } else {
-                console.error("Server message:", error.response.data.message || "No message");
-                console.error("Validation errors:", error.response.data.errors || "No additional error info");
-                const errorsObject = error.response.data.errors;
-                let errorsArrayMsg = "no message";
-                if (errorsObject) {
-                    const errorsArray = Object.entries(errorsObject).map(([key, value]) => `${key}: ${value}`);
-                    errorsArrayMsg = errorsArray.join(" | ")
-                }
-
-                setState({
-                    msg: errorsArrayMsg,
-                    class: "fail"
-                });
-                if (error.response.data === "You are not logged-in.") {
-                    setState({
-                        msg: error.response.data,
-                        class: "fail"
-                    });
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                    setTimeout(() => {
-                        console.log(error.response)
-                        logout(navigate, dispatch);
-                        dispatch(setMsg(`${error.response.data}. logging out...`))
-                    }, config.uiTimeConfig.denyAccess);
+                    logout(navigate, dispatch);
+                    dispatch(setMsg(result.msg || "Session expired – logging out"));
+                    return;
                 }
             }
-        }
 
+        }
     }
     return (
         <>
             <div className="componentBox">
+                {state.loading && <LoadingBox />}
                 {role === "user" && <h1>restricted access!</h1>}
                 {role === "admin" &&
                     <div>

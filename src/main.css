@@ -279,7 +279,7 @@ h1,h2 {
     display: none;
 }
 
-.loggingOutModal {
+.loggingOutModal, .loadingModal {
     position: fixed;
     top: 0;
     left: 0;
@@ -300,6 +300,12 @@ h1,h2 {
     width: 80px;
     height: 80px;
     animation: rotate 1s linear infinite;
+}
+.smallLoading{
+    width: 40px !important;
+    height: 40px !important;
+    animation: rotate 1s linear infinite;
+    
 }
 
 @keyframes fadeIn {
@@ -341,8 +347,6 @@ h1,h2 {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     padding: 15px;
     width: 100%;
-    max-width: 380px;
-    
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -621,9 +625,7 @@ h1,h2 {
     background-color: var(--border) !important;
     color: var(--danger);
 }
-.editVacationForm{
-    max-width: 100%;
-}
+
 .editVacationForm>div {
     display: flex;
     flex-direction: column;
@@ -632,7 +634,6 @@ h1,h2 {
 .editVacationForm input,
 .editVacationForm textarea,
 .editVacationForm select {
-    
     padding: 10px;
     font-size: 16px;
     border: 1px solid var(--muted);
@@ -666,6 +667,7 @@ h1,h2 {
 .editVacationForm label {
     color: var(--text);
     margin: 5px;
+
 }
 
 .editVacationForm span {
@@ -676,10 +678,8 @@ h1,h2 {
 }
 
 .fileName {
-    margin: none;
-    max-width: 280px;
-    overflow-x: scroll;
     color: var(--text) !important;
+    max-width: 280px;
 }
 
 .editVacationForm .form-buttons {

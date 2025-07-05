@@ -10,7 +10,8 @@ import EditAndDeleteBox from "../EditAndDeleteBox/EditAndDeleteBox";
 import { toggleFollow } from "../../../Services/toggleFollow";
 import { updateVacation } from "../../../Services/updateVacation";
 import unknownImg from "../../../assets/images/image-not-found-icon.png"
-import axios from "axios";
+import loading from "../../../assets/images/loading.png"
+import { refreshToken } from "../../../Services/refreshToken";
 
 interface VacationProps extends VacationType {
     remountFatherComponent: () => void;
@@ -20,7 +21,7 @@ export default function Vacation(vacation: VacationProps) {
     const [state, setState] = useState({
         tracked: false,
         followerCount: 0,
-        image: null as JSX.Element | null,
+        image: <img src={loading} className="smallLoading" />,
         isEditing: false,
         showDeleteModal: false,
         mounter: true,
@@ -37,14 +38,27 @@ export default function Vacation(vacation: VacationProps) {
     useEffect(() => {
         async function fetchImage() {
             try {
-                const image = await axios.get(vacation.picture_url,
+                const image = await jwtAxios.get(vacation.picture_url,
                     { responseType: "blob" }
                 );
                 const imageUrl = URL.createObjectURL(image.data);
                 setState((prev)=>({...prev,image:<img src={imageUrl} />}))
             } catch (error: any) {
                 console.log(error.message)
-                setState((prev)=>({...prev,image:<img src={unknownImg} />}))
+                const status = error.response?.status;
+                if (status === 401 || status === 403) {
+                    const result = await refreshToken();
+                    if (result.success) {
+                        const image = await jwtAxios.get(vacation.picture_url,
+                            { responseType: "blob" }
+                        );
+                        const imageUrl = URL.createObjectURL(image.data);
+                        setState((prev) => ({ ...prev, image: <img src={imageUrl} /> }))
+                        return;
+                    } else {
+                        setState((prev) => ({ ...prev, image: <img src={unknownImg} /> }))
+                    }
+                }
             }
         };
         fetchImage();
