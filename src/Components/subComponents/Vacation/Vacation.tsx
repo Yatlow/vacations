@@ -15,6 +15,8 @@ import { refreshToken } from "../../../Services/refreshToken";
 
 interface VacationProps extends VacationType {
     remountFatherComponent: () => void;
+    setLoading: () => void;
+    setNotLoading: () => void;
 };
 
 export default function Vacation(vacation: VacationProps) {
@@ -42,7 +44,7 @@ export default function Vacation(vacation: VacationProps) {
                     { responseType: "blob" }
                 );
                 const imageUrl = URL.createObjectURL(image.data);
-                setState((prev)=>({...prev,image:<img src={imageUrl} />}))
+                setState((prev) => ({ ...prev, image: <img src={imageUrl} /> }))
             } catch (error: any) {
                 console.log(error.message)
                 const status = error.response?.status;
@@ -75,7 +77,7 @@ export default function Vacation(vacation: VacationProps) {
                         }
                     }
                 });
-                setState((prev)=>({...prev,tracked:isTrackedByUser,followerCount:count}))
+                setState((prev) => ({ ...prev, tracked: isTrackedByUser, followerCount: count }))
             } catch (err) {
                 console.log("Invalid tracked data in localStorage");
             }
@@ -86,14 +88,14 @@ export default function Vacation(vacation: VacationProps) {
         return num.toString().padStart(2, "0");
     };
 
-   
+
 
     async function deleteVacation() {
         try {
             const deleted = await jwtAxios.delete(`${config.server.url}${config.server.port}/vacations/delete`, {
                 data: { id: vacation.id }
             });
-            setState((prev)=>({...prev,showDeleteModal:false}))
+            setState((prev) => ({ ...prev, showDeleteModal: false }))
             if (deleted.data.rowCount) {
                 vacation.remountFatherComponent();
             }
@@ -107,13 +109,13 @@ export default function Vacation(vacation: VacationProps) {
             {state.showDeleteModal && <div className="deleteModal">
                 <div className="deleteCaption">are you sure you want to delete the vacation <strong>{vacation.destination}</strong>?</div>
                 <div className="deleteModalBtnBox">
-                    <div className="cancelDelete" onClick={() => setState((prev)=>({...prev,showDeleteModal:false}))}>cancel</div>
+                    <div className="cancelDelete" onClick={() => setState((prev) => ({ ...prev, showDeleteModal: false }))}>cancel</div>
                     <div className="confirmDelete" onClick={deleteVacation}>confirm</div>
                 </div>
             </div>}
             {state.image}
-            {role === "user" && <FollowBox count={state.followerCount} toggle={()=>toggleFollow(state,setState,+vacation.id)} tracked={state.tracked}/>}
-            {role === "admin" && <EditAndDeleteBox followerCount={state.followerCount} image={state.image} isEditing={state.isEditing} mounter={state.mounter} setState={setState} showDeleteModal={state.showDeleteModal} tracked={state.tracked}/>}
+            {role === "user" && <FollowBox count={state.followerCount} toggle={() => toggleFollow(state, setState, vacation.setLoading, vacation.setNotLoading, +vacation.id)} tracked={state.tracked} />}
+            {role === "admin" && <EditAndDeleteBox followerCount={state.followerCount} image={state.image} isEditing={state.isEditing} mounter={state.mounter} setState={setState} showDeleteModal={state.showDeleteModal} tracked={state.tracked} />}
             {!state.isEditing ?
                 <>
                     <h3>{vacation.destination}</h3>
@@ -124,7 +126,7 @@ export default function Vacation(vacation: VacationProps) {
                     <p className="description">{vacation.description}</p>
                 </>
                 :
-                <VacationForm mode="edit" onSubmit={(data)=>updateVacation(data,+vacation.id,setState,vacation.remountFatherComponent)} defaultValues={vacation} fileRequired={false} onCancel={() => setState((prev)=>({...prev,isEditing:false}))} formMethods={formMethods} FormClassName="editVacationForm"/>
+                <VacationForm mode="edit" onSubmit={(data) => updateVacation(data, +vacation.id, setState, vacation.remountFatherComponent)} defaultValues={vacation} fileRequired={false} onCancel={() => setState((prev) => ({ ...prev, isEditing: false }))} formMethods={formMethods} FormClassName="editVacationForm" />
 
             }
         </div>

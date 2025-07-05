@@ -2,7 +2,7 @@ import jwtAxios from "./JwtAxios";
 import config from "../../config/config.json";
 import { refreshToken } from "./refreshToken";
 
-export async function toggleFollow(state:any,setState:React.Dispatch<React.SetStateAction<any>>,id:number) {
+export async function toggleFollow(state: any, setState: React.Dispatch<React.SetStateAction<any>>, setLoad: React.Dispatch<React.SetStateAction<any>>, setNotLoading: React.Dispatch<React.SetStateAction<any>>, id: number) {
     const stored = localStorage.getItem("loginData");
     const loginData = stored ? JSON.parse(stored) : "";
     const uid = loginData.uuid;
@@ -12,7 +12,7 @@ export async function toggleFollow(state:any,setState:React.Dispatch<React.SetSt
         vacation_id: id
     }
     try {
-        console.log(followData)
+        setLoad(true)
         const toggleFollow = await jwtAxios.post(`${config.server.url}${config.server.port}/vacations/track`, followData);
         if (toggleFollow.data.rowCount) {
             const trackingRes = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/track`);
@@ -35,5 +35,8 @@ export async function toggleFollow(state:any,setState:React.Dispatch<React.SetSt
                 return;
             }
         }
+    }
+    finally{
+        setNotLoading(false)
     }
 };

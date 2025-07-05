@@ -25,7 +25,7 @@ interface VacationsState {
     refresh: boolean,
     err: boolean,
     errInfo: any,
-    loading:boolean
+    loading: boolean
 };
 
 export default function Vacations() {
@@ -43,7 +43,7 @@ export default function Vacations() {
         errInfo: "",
         paginationStart: 0,
         paginationEnd: 9,
-        loading:true
+        loading: true
     });
     const stored = localStorage.getItem("loginData");
     const loginData = stored ? JSON.parse(stored) : "";
@@ -56,7 +56,7 @@ export default function Vacations() {
             setState((prev) => ({
                 ...prev, followed: false, future: false, active: false,
                 allVacations: sorted, paginationStart: 0, paginationEnd: 9, displayedVacations: sorted,
-                visibleVacations: sorted.slice(0, 9),loading:false
+                visibleVacations: sorted.slice(0, 9), loading: false
             }));
         };
         async function fetchVacationsAndTracked() {
@@ -68,7 +68,7 @@ export default function Vacations() {
                 const trackingRes = await getTrackings();
                 localStorage.setItem("trackedData", JSON.stringify(trackingRes.data.rows));
 
-            }  catch (error: any) {
+            } catch (error: any) {
                 console.log(error)
                 const status = error.response?.status;
                 if (status === 401 || status === 403) {
@@ -86,7 +86,7 @@ export default function Vacations() {
                             logout(navigate, dispatch);
                             dispatch(setMsg(result.msg || "Session expired – logging out"));
                             const msg = error.response?.data ? error.response.data : error.message;
-                            setState((prev) => ({ ...prev, err: true, errInfo: msg ,loading:false}));
+                            setState((prev) => ({ ...prev, err: true, errInfo: msg, loading: false }));
                         }, config.uiTimeConfig.denyAccess);
                         return;
                     }
@@ -100,7 +100,7 @@ export default function Vacations() {
     return (
         <>
             <div className="componentBox">
-                {state.loading && <LoadingBox/>}
+                {state.loading && <LoadingBox />}
                 <h1>Our Vacations!</h1>
                 {state.err && <div className="fail">{state.errInfo}</div>}
                 <div className="sortBox">
@@ -140,7 +140,8 @@ export default function Vacations() {
                 </div>}
                 <div className="vacationsBox">
                     {state.visibleVacations.map(vacation => (
-                        <Vacation key={vacation.id} {...vacation} remountFatherComponent={() => setState((prev) => ({ ...prev, refresh: !state.refresh }))} />
+                        <Vacation key={vacation.id} {...vacation} remountFatherComponent={() => setState((prev) => ({ ...prev, refresh: !state.refresh }))}
+                            setLoading={() => setState((prev) => ({ ...prev, loading: true }))} setNotLoading={() => setState((prev) => ({ ...prev, loading: false }))} />
                     ))}
                 </div>
             </div >
