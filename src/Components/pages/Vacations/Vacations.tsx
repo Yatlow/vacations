@@ -64,9 +64,9 @@ export default function Vacations() {
             const getTrackings = async () => jwtAxios.get(`${config.server.url}${config.server.port}/vacations/track`);
             try {
                 const vacationsRes = await getVacations();
-                handleGetVacationsSuccess(vacationsRes.data.rows)
                 const trackingRes = await getTrackings();
                 localStorage.setItem("trackedData", JSON.stringify(trackingRes.data.rows));
+                handleGetVacationsSuccess(vacationsRes.data.rows)
 
             } catch (error: any) {
                 console.log(error)

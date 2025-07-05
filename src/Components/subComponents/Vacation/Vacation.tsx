@@ -77,7 +77,7 @@ export default function Vacation(vacation: VacationProps) {
                         }
                     }
                 });
-                setState((prev) => ({ ...prev, tracked: isTrackedByUser, followerCount: count }))
+                setState((prev) => ({ ...prev, tracked: isTrackedByUser, followerCount: count, mounter:!prev.mounter }))
             } catch (err) {
                 console.log("Invalid tracked data in localStorage");
             }
