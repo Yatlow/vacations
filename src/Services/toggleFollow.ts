@@ -14,22 +14,22 @@ export async function toggleFollow(state: any, setState: React.Dispatch<React.Se
     try {
         setLoad(true)
         const toggleFollow = await jwtAxios.post(`${config.server.url}${config.server.port}/vacations/track`, followData);
-        if (toggleFollow.data.rowCount>0) {
+        if (toggleFollow.data.rowCount > 0) {
             const trackingRes = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/track`);
             console.log(trackingRes.data.rows)
             localStorage.setItem("trackedData", JSON.stringify(trackingRes.data.rows));
-            setState((prev:any) => ({ ...prev, mounter: !state.mounter }))
+            setState((prev: any) => ({ ...prev, mounter: !state.mounter }))
         }
     } catch (error: any) {
         console.log(error)
         const status = error.response?.status;
+        console.log(status);
+        
         if (status === 401 || status === 403) {
-            console.log(status)
             const result = await refreshToken();
-            console.log(result)
             if (result.success) {
                 const toggleFollow = await jwtAxios.post(`${config.server.url}${config.server.port}/vacations/track`, followData);
-                if (toggleFollow.data.affectedRows>0) {
+                if (toggleFollow.data.affectedRows > 0) {
                     const trackingRes = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/track`);
                     console.log(trackingRes.data.rows)
                     localStorage.setItem("trackedData", JSON.stringify(trackingRes.data));
@@ -37,9 +37,9 @@ export async function toggleFollow(state: any, setState: React.Dispatch<React.Se
                 }
                 return;
             }
-        }
+        } 
     }
-    finally{
+    finally {
         setNotLoading(false)
     }
 };

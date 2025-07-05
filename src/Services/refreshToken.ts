@@ -6,16 +6,16 @@ export async function refreshToken(){
     if (!stored) return { success: false, msg: "No login data" };
 
     const loginData =JSON.parse(stored);
-    const {refreshToken}= loginData.refreshToken;
+    const {refreshToken}= loginData;
     if (!refreshToken) return { success: false, msg: "No refresh token found." };
     try {
+        
         const res = await axios.post(`${config.server.url}${config.server.port}/auth/refresh`, {refreshToken});
         const { token, refreshToken: newRefresh } = res.data;
         loginData.token=token;
         loginData.refreshToken = newRefresh ?? refreshToken;
 
         localStorage.setItem("loginData", JSON.stringify(loginData));
-        console.log(loginData)
         return { success: true, msg: "" }
     } catch (error: any) {
         console.log(error)

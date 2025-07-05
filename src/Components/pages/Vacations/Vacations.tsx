@@ -74,11 +74,11 @@ export default function Vacations() {
                 if (status === 401 || status === 403) {
                     const result = await refreshToken();
                     if (result.success) {
-                        const retry = await getVacations();
-                        if (retry.data.length > 0) {
-                            await handleGetVacationsSuccess(retry.data);
+                        const retry = await getVacations();                        
+                        if (retry.data.rows.length > 0) {
+                            await handleGetVacationsSuccess(retry.data.rows);
                             const trackingRes = await getTrackings();
-                            localStorage.setItem("trackedData", JSON.stringify(trackingRes.data));
+                            localStorage.setItem("trackedData", JSON.stringify(trackingRes.data.rows));
                         }
                         return;
                     } else {
@@ -91,6 +91,9 @@ export default function Vacations() {
                         return;
                     }
                 }
+            }finally{
+                setState((prev) => ({ ...prev,loading: false }));
+
             }
         };
         fetchVacationsAndTracked();

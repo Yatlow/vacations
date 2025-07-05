@@ -48,6 +48,7 @@ export default function Vacation(vacation: VacationProps) {
             } catch (error: any) {
                 console.log(error.message)
                 const status = error.response?.status;
+                setState((prev) => ({ ...prev, image: <img src={unknownImg} /> }))
                 if (status === 401 || status === 403) {
                     const result = await refreshToken();
                     if (result.success) {
@@ -57,8 +58,6 @@ export default function Vacation(vacation: VacationProps) {
                         const imageUrl = URL.createObjectURL(image.data);
                         setState((prev) => ({ ...prev, image: <img src={imageUrl} /> }))
                         return;
-                    } else {
-                        setState((prev) => ({ ...prev, image: <img src={unknownImg} /> }))
                     }
                 }
             }
@@ -82,7 +81,7 @@ export default function Vacation(vacation: VacationProps) {
                 console.log("Invalid tracked data in localStorage");
             }
         }
-    }, [vacation, state.mounter]);
+    }, [vacation]);
 
     function pad(num: number) {
         return num.toString().padStart(2, "0");
