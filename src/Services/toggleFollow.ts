@@ -14,7 +14,7 @@ export async function toggleFollow(state: any, setState: React.Dispatch<React.Se
     try {
         setLoad(true)
         const toggleFollow = await jwtAxios.post(`${config.server.url}${config.server.port}/vacations/track`, followData);
-        if (toggleFollow.data.rowCount) {
+        if (toggleFollow.data.rowCount>0) {
             const trackingRes = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/track`);
             console.log(trackingRes.data.rows)
             localStorage.setItem("trackedData", JSON.stringify(trackingRes.data.rows));
@@ -27,7 +27,7 @@ export async function toggleFollow(state: any, setState: React.Dispatch<React.Se
             const result = await refreshToken();
             if (result.success) {
                 const toggleFollow = await jwtAxios.post(`${config.server.url}${config.server.port}/vacations/track`, followData);
-                if (toggleFollow.data.affectedRows) {
+                if (toggleFollow.data.affectedRows>0) {
                     const trackingRes = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/track`);
                     localStorage.setItem("trackedData", JSON.stringify(trackingRes.data));
                     setState((prev: any) => ({ ...prev, mounter: !state.mounter }))
