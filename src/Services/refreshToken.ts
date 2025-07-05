@@ -15,7 +15,7 @@ export async function refreshToken(){
         loginData.refreshToken = newRefresh ?? refreshToken;
 
         localStorage.setItem("loginData", JSON.stringify(loginData));
-        
+        console.log(loginData)
         return { success: true, msg: "" }
     } catch (error: any) {
         console.log(error)
