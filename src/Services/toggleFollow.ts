@@ -16,14 +16,12 @@ export async function toggleFollow(state: any, setState: React.Dispatch<React.Se
         const toggleFollow = await jwtAxios.post(`${config.server.url}${config.server.port}/vacations/track`, followData);
         if (toggleFollow.data.rowCount > 0) {
             const trackingRes = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/track`);
-            console.log(trackingRes.data.rows)
             localStorage.setItem("trackedData", JSON.stringify(trackingRes.data.rows));
             setState((prev: any) => ({ ...prev, mounter: !state.mounter }))
         }
     } catch (error: any) {
         console.log(error)
         const status = error.response?.status;
-        console.log(status);
         
         if (status === 401 || status === 403) {
             const result = await refreshToken();

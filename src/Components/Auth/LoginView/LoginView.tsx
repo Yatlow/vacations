@@ -22,7 +22,7 @@ function LoginView() {
     async function login(credentials: Credentials) {
         try {
             const login = await axios.post(`${config.server.url}${config.server.port}/auth/login`, credentials)
-            localStorage.setItem("loginData",JSON.stringify(login.data.rows));
+            localStorage.setItem("loginData",JSON.stringify(login.data));
             navigate("/vacations");
             dispatch(setAuth(true));
         } catch (error:any) {

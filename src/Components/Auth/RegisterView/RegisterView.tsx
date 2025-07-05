@@ -25,8 +25,8 @@ function RegisterView() {
 
     async function registerUser(userData: User) {
         try {
-            const register = await axios.post(`${config.server.url}${config.server.port}/auth/register`, userData)
-            localStorage.setItem("loginData", JSON.stringify(register.data.rows));
+            const register = await axios.post(`${config.server.url}${config.server.port}/auth/register`, userData)            
+            localStorage.setItem("loginData", JSON.stringify(register.data));
             navigate("/vacations");
             dispatch(setAuth(true))
         } catch (error: any) {
