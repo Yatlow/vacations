@@ -24,7 +24,9 @@ export async function toggleFollow(state: any, setState: React.Dispatch<React.Se
         console.log(error)
         const status = error.response?.status;
         if (status === 401 || status === 403) {
+            console.log(status)
             const result = await refreshToken();
+            console.log(result)
             if (result.success) {
                 const toggleFollow = await jwtAxios.post(`${config.server.url}${config.server.port}/vacations/track`, followData);
                 if (toggleFollow.data.affectedRows>0) {
