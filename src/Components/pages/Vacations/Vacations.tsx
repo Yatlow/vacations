@@ -12,6 +12,9 @@ import { handlePagination } from "../../../Services/handlePagination";
 import { applyFilters } from "../../../Services/applyFilters";
 import { refreshToken } from "../../../Services/refreshToken";
 import LoadingBox from "../../subComponents/LoadingBox/LoadingBox";
+import unknownImg from "../../../assets/images/image-not-found-icon.png";
+import { imageCache } from "../../../Data/imageCache";
+
 
 interface VacationsState {
     allVacations: VacationType[],
@@ -53,10 +56,30 @@ export default function Vacations() {
     useEffect(() => {
         const handleGetVacationsSuccess = async (data: VacationType[]) => {
             const sorted = data.sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime());
+            await Promise.all(sorted.map(async (vacation) => {
+                if (!imageCache[vacation.picture_url]) {
+                    try {
+                        const res = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/image?image=${vacation.picture_url}`, { responseType: "blob" });
+                        imageCache[vacation.picture_url] = URL.createObjectURL(res.data);
+                    } catch (err:any) {
+                        const status = err.response?.status;
+                        if (status === 401 || status === 403) {
+                            const result = await refreshToken();
+                            if (result.success) {
+                                const retry = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/image?image=${vacation.picture_url}`, { responseType: "blob" });
+                                imageCache[vacation.picture_url] = URL.createObjectURL(retry.data);
+                                return;
+                            } else {
+                                imageCache[vacation.picture_url] = unknownImg;
+                            }
+                        }
+                    }
+                }
+            }));
             setState((prev) => ({
                 ...prev, followed: false, future: false, active: false,
-                allVacations: sorted, paginationStart: 0, paginationEnd: 9, displayedVacations: sorted,
-                visibleVacations: sorted.slice(0, 9), loading: false
+                allVacations: sorted, paginationStart: 0, paginationEnd: PAGE_SIZE, displayedVacations: sorted,
+                visibleVacations: sorted.slice(0, PAGE_SIZE), loading: false
             }));
         };
         async function fetchVacationsAndTracked() {
@@ -74,7 +97,7 @@ export default function Vacations() {
                 if (status === 401 || status === 403) {
                     const result = await refreshToken();
                     if (result.success) {
-                        const retry = await getVacations();                        
+                        const retry = await getVacations();
                         if (retry.data.rows.length > 0) {
                             await handleGetVacationsSuccess(retry.data.rows);
                             const trackingRes = await getTrackings();
@@ -91,9 +114,8 @@ export default function Vacations() {
                         return;
                     }
                 }
-            }finally{
-                setState((prev) => ({ ...prev,loading: false }));
-
+            } finally {
+                setState((prev) => ({ ...prev, loading: false }));
             }
         };
         fetchVacationsAndTracked();
@@ -144,7 +166,7 @@ export default function Vacations() {
                 <div className="vacationsBox">
                     {state.visibleVacations.map(vacation => (
                         <Vacation key={vacation.id} {...vacation} remountFatherComponent={() => setState((prev) => ({ ...prev, refresh: !state.refresh }))}
-                            setLoading={() => setState((prev) => ({ ...prev, loading: true }))} setNotLoading={() => setState((prev) => ({ ...prev, loading: false }))} />
+                            setLoading={() => setState((prev) => ({ ...prev, loading: true }))} setNotLoading={() => setState((prev) => ({ ...prev, loading: false }))} imageUrl={imageCache[vacation.picture_url] ?? unknownImg} />
                     ))}
                 </div>
             </div >

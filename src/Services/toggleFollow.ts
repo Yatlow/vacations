@@ -17,7 +17,7 @@ export async function toggleFollow(state: any, setState: React.Dispatch<React.Se
         if (toggleFollow.data.rowCount > 0) {
             const trackingRes = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/track`);
             localStorage.setItem("trackedData", JSON.stringify(trackingRes.data.rows));
-            setState((prev: any) => ({ ...prev, mounter: !state.mounter }))
+            setState((prev: any) => ({ ...prev, tracked: !state.tracked }))
         }
     } catch (error: any) {
         console.log(error)
@@ -30,7 +30,7 @@ export async function toggleFollow(state: any, setState: React.Dispatch<React.Se
                 if (toggleFollow.data.affectedRows > 0) {
                     const trackingRes = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/track`);
                     localStorage.setItem("trackedData", JSON.stringify(trackingRes.data));
-                    setState((prev: any) => ({ ...prev, mounter: !state.mounter }))
+                    setState((prev: any) => ({ ...prev, tracked: !state.tracked }))
                 }
                 return;
             }

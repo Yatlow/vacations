@@ -27,7 +27,7 @@ export default function VacationForm({
     FormClassName
 }: VacationFormProps) {
     const { register, handleSubmit, formState: { errors }, setValue, watch } = formMethods;
-    const [fileSelected, setFileSelected] = useState(false);
+    const [state, setState] = useState({ fileSelected: false, previewUrl: "" });
 
     const now = new Date();
     now.setHours(0, 0, 0, 0);
@@ -38,7 +38,13 @@ export default function VacationForm({
 
     const startValue = watch("start_time");
 
-
+    useEffect(() => {
+        return () => {
+            if (state.previewUrl) {
+                URL.revokeObjectURL(state.previewUrl);
+            }
+        };
+    }, [state.previewUrl]);
 
     useEffect(() => {
         if (defaultValues) {
@@ -132,14 +138,16 @@ export default function VacationForm({
                         ...(fileRequired && { required: true }),
                         onChange: (e) => {
                             const file = e.target.files?.[0];
-                            if (file) setFileSelected(true);
+                            if (state.previewUrl) URL.revokeObjectURL(state.previewUrl);
+                            const objectUrl = URL.createObjectURL(file);
+                            if (file) setState({ fileSelected: true, previewUrl: objectUrl });
                         }
                     })}
                 />
                 {fileRequired && errors.picture_url && <span>Photo is required</span>}
             </div>
 
-            {!fileRequired && !fileSelected && (
+            {!fileRequired && !state.fileSelected && (
                 <span className="fileName">{defaultValues.picture_url}</span>
             )}
 
