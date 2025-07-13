@@ -8,7 +8,8 @@ interface updateVacationData extends VacationType {
     imageUrl: string;
 }
 
-export async function updateVacation(data: updateVacationData, id: number, setState: React.Dispatch<React.SetStateAction<any>>) {
+export async function updateVacation(data: updateVacationData, id: number, setState: React.Dispatch<React.SetStateAction<any>>,  setLoad: React.Dispatch<React.SetStateAction<any>>, setNotLoading: React.Dispatch<React.SetStateAction<any>>) {
+    let imagePublicUrl="";
     const myFormData = new FormData();
     myFormData.append("id", id.toString());
     myFormData.append("destination", data.destination);
@@ -26,7 +27,9 @@ export async function updateVacation(data: updateVacationData, id: number, setSt
         myFormData.append("image", imageFile);
     }
     try {
-        await jwtAxios.put(`${config.server.url}${config.server.port}/vacations/update`, myFormData);
+        setLoad(true)
+        const newV= await jwtAxios.put(`${config.server.url}${config.server.port}/vacations/update`, myFormData);
+        imagePublicUrl= newV.data.pic;
         const newVacation: Record<string, any> = {};
         for (const [key, value] of myFormData.entries()) {
             (newVacation as any)[key] = value;
@@ -39,7 +42,7 @@ export async function updateVacation(data: updateVacationData, id: number, setSt
                 URL.revokeObjectURL(imageCache[data.picture_url]);
                 delete imageCache[data.picture_url];
             }
-            const res = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/image?image=${newVacation.picture_url}`, { responseType: "blob" });
+            const res = await jwtAxios.get(imagePublicUrl, { responseType: "blob" });
             const blobUrl = URL.createObjectURL(res.data);
             imageCache[newVacation.pictureUrl] = blobUrl;
             newVacation.imageUrl = blobUrl;
@@ -76,6 +79,8 @@ export async function updateVacation(data: updateVacationData, id: number, setSt
                 return;
             }
         }
+    }finally{
+        setNotLoading(false)
     }
 
 }

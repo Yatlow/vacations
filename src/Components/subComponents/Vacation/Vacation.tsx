@@ -117,7 +117,7 @@ export default function Vacation(vacation: VacationProps) {
                     <p className="description">{state.vacationData.description}</p>
                 </>
                 :
-                <VacationForm mode="edit" onSubmit={(data) => updateVacation(data, +state.vacationData.id, setState)} defaultValues={vacation} fileRequired={false} onCancel={() => setState((prev) => ({ ...prev, isEditing: false }))} formMethods={formMethods} FormClassName="editVacationForm" />
+                <VacationForm mode="edit" onSubmit={(data) => updateVacation(data, +state.vacationData.id, setState,vacation.setLoading,vacation.setNotLoading)} defaultValues={state.vacationData} fileRequired={false} onCancel={() => setState((prev) => ({ ...prev, isEditing: false }))} formMethods={formMethods} FormClassName="editVacationForm" />
 
             }
         </div>
