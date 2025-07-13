@@ -59,7 +59,7 @@ export default function Vacations() {
             await Promise.all(sorted.map(async (vacation) => {
                 if (!imageCache[vacation.picture_url]) {
                     try {
-                        const res = await jwtAxios.get(`${config.server.url}${config.server.port}/vacations/image?image=${vacation.picture_url}`, { responseType: "blob" });
+                        const res = await jwtAxios.get(`${vacation.picture_url}`, { responseType: "blob" });
                         imageCache[vacation.picture_url] = URL.createObjectURL(res.data);
                     } catch (err:any) {
                         const status = err.response?.status;
