@@ -67,6 +67,7 @@ export default function Vacation(vacation: VacationProps) {
 
     async function deleteVacation() {
         try {
+            vacation.setLoading()
             const deleted = await jwtAxios.delete(`${config.server.url}${config.server.port}/vacations/delete`, {
                 data: { id: state.vacationData.id }
             });
@@ -92,6 +93,8 @@ export default function Vacation(vacation: VacationProps) {
                     setState((prev) => ({ ...prev, showDeleteModal: false }))
                 }
             }
+        }finally{
+            vacation.setNotLoading()
         }
     };
 
