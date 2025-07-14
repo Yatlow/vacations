@@ -77,7 +77,7 @@ export default function Vacations() {
                 }
             }));
             setState((prev) => ({
-                ...prev, followed: false, future: false, active: false,
+                ...prev,
                 allVacations: sorted, paginationStart: 0, paginationEnd: PAGE_SIZE, displayedVacations: sorted,
                 visibleVacations: sorted.slice(0, PAGE_SIZE), loading: false
             }));
@@ -120,6 +120,11 @@ export default function Vacations() {
         };
         fetchVacationsAndTracked();
     }, [state.refresh]);
+    useEffect(() => {
+    if (!state.loading && !state.err && state.allVacations.length > 0) {
+        applyFilters(state, setState);
+    }
+}, [state.allVacations, state.followed, state.active, state.future]);
 
 
     return (
@@ -135,13 +140,11 @@ export default function Vacations() {
                             onChange={(e) => {
                                 const updated = { ...state, followed: e.target.checked };
                                 setState(updated);
-                                applyFilters(updated, setState);
                             }} /><label htmlFor="followed">Only vacations I follow</label></div>}
                     <div><input id="future" type="checkbox" disabled={state.active} checked={state.future}
                         onChange={(e) => {
                             const updated = { ...state, future: e.target.checked };
                             setState(updated);
-                            applyFilters(updated, setState);
                         }} /><label htmlFor="future" className={state.active ? "disabledCheck" : ""}>Only future vacations</label></div>
                     <div><input id="active" type="checkbox" disabled={state.future} checked={state.active}
                         onChange={(e) => {
