@@ -1,5 +1,30 @@
 import {type Action, combineReducers, createStore } from 'redux';
+import {jwtDecode} from "jwt-decode";
+
 const stored = localStorage.getItem("loginData");
+let parsedToken: any = null;
+let isAuth = false;
+
+if (stored) {
+    try {
+        const parsed = JSON.parse(stored);
+        parsedToken = parsed.token;
+
+        const decoded: { exp: number } = jwtDecode(parsedToken);
+        const now = Date.now() / 1000;
+        console.log(decoded.exp,now);
+        
+
+        if (decoded.exp > now) {
+            isAuth = true;
+        } else {
+            localStorage.removeItem("loginData"); 
+        }
+    } catch (err) {
+        localStorage.removeItem("loginData");
+    }
+}
+
 const initialState = !!stored;
 const initialMsgState = "logging out...";
 const initialModalClass = "hiddenLoggingOutModal";

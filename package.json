@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
-    "jsx": "react-jsx",
-    "module": "ESNext",
-    "target": "ESNext",
-    "moduleResolution": "node"
+        "jsx": "react-jsx",
+        "module": "ESNext",
+        "target": "ESNext",
+        "moduleResolution": "node"
     },
     "homepage": "https://Yatlow.github.io/vacations",
     "name": "client",
@@ -22,6 +22,7 @@
         "axios": "^1.9.0",
         "chart.js": "^4.5.0",
         "chartjs-plugin-datalabels": "^2.2.0",
+        "jwt-decode": "^4.0.0",
         "lucide-react": "^0.522.0",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
