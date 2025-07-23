@@ -25,7 +25,7 @@ if (stored) {
 }
 
 
-const initialState = !!stored;
+const initialState = isAuth;
 const initialMsgState = "logging out...";
 const initialModalClass = "hiddenLoggingOutModal";
 
