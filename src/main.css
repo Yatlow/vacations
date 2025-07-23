@@ -27,8 +27,10 @@
     width: 100%;
 }
 
-.authView {
+.authView,
+.resetPassModal {
     max-width: 400px;
+    max-height: 300px;
     margin: 20px auto;
     padding: 10px 20px;
     background-color: var(--background);
@@ -37,17 +39,78 @@
     color: var(--text);
 }
 
-h1,h2 {
+.resetPassModal {
+    position: absolute;
+    border: var(--canvasBorder) 1px solid;
+    max-width: 100%;
+    width: 50%;
+    top: 15%;
+    left: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 50px;
+}
+.resetPassModal form{
+    width: 100%;
+}
+
+.otpErr {
+    background-color: var(--errorBg);
+    color: var(--danger);
+    max-width: fit-content;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 1px 1px 2px;
+    margin-bottom: 20px;
+}
+
+.closeResetPassModal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 15px;
+    color: var(--danger);
+    cursor: pointer;
+}
+
+.insertEmail {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.insertNewPass{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 20px;
+    
+}
+.newPasswordWrapper{
+    position: relative;
+}
+
+.resetPassModal input {
+    margin-left: 10px;
+}
+
+h1,
+h2 {
     color: var(--primary);
     text-align: center;
     margin-bottom: 15px;
 }
-.notFound{
+
+.notFound {
     font-size: 100px;
     color: var(--primaryDark);
 }
 
-.authView h1,h2 {
+.authView h1,
+h2 {
     color: var(--primaryDark);
 }
 
@@ -62,13 +125,15 @@ h1,h2 {
     margin-bottom: 10px;
 }
 
-.authView label {
+.authView label,
+.resetPassModal label {
     font-weight: bold;
     color: var(--text);
     margin-bottom: 3px;
 }
 
-.authView input {
+.authView input,
+.resetPassModal input {
     padding: 8px;
     font-size: 16px;
     border-radius: 8px;
@@ -76,20 +141,22 @@ h1,h2 {
     transition: border 0.3s;
 }
 
-.authView input:focus {
+.authView input:focus,
+.resetPassModal input:focus {
     border-color: var(--primary);
     outline: none;
 }
 
-.authView span {
+.authView span, .insertNewPass span {
     color: var(--danger);
     font-size: 16px;
     margin-top: 2px;
 }
-.suggest{
+
+.suggest {
     color: var(--canvasBorder) !important;
     cursor: pointer;
-    margin-top:-10px !important;
+    margin-top: -10px !important;
 }
 
 .loginErr {
@@ -102,7 +169,8 @@ h1,h2 {
     text-align: center;
 }
 
-.authView button {
+.authView button,
+.resetPassModal button {
     width: 60%;
     padding: 10px;
     font-size: 17px;
@@ -157,6 +225,48 @@ h1,h2 {
     color: var(--danger);
 }
 
+.insertOtp {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.OTPinputBox {
+    display: flex;
+    flex-direction: column;
+}
+.inputsBox{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.OTPinput,.OTPinput:focus {
+    background-color: transparent;
+    border: none !important;
+    border-radius: 0px !important;
+    border-bottom: var(--canvasBorder) 2px solid !important;
+    width: 41px;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    color: var(--text);
+    font-size: 30px !important;
+    text-align: center !important  ;
+}
+.otpInfoBox{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+}
+.lableOtp{
+    color: var(--muted);
+    font-size: 14px;
+}
+.resendOtp{
+    color: var(--canvasBorder);
+    cursor: pointer;
+}
 .menu {
     width: 30%;
     display: flex;
@@ -279,7 +389,8 @@ h1,h2 {
     display: none;
 }
 
-.loggingOutModal, .loadingModal {
+.loggingOutModal,
+.loadingModal {
     position: fixed;
     top: 0;
     left: 0;
@@ -301,11 +412,12 @@ h1,h2 {
     height: 80px;
     animation: rotate 1s linear infinite;
 }
-.smallLoading{
+
+.smallLoading {
     width: 40px !important;
     height: 40px !important;
     animation: rotate 1s linear infinite;
-    
+
 }
 
 @keyframes fadeIn {
@@ -391,7 +503,7 @@ h1,h2 {
 
 .description {
     font-size: 14px !important;
-    color:var(--text);
+    color: var(--text);
     background-color: var(--surface);
     padding: 8px 10px;
     border-radius: 10px;
@@ -492,6 +604,7 @@ h1,h2 {
     color: white;
     transform: translateY(1px);
 }
+
 .currentPage,
 .currentPage div:hover,
 .currentPage div:active {
@@ -501,9 +614,12 @@ h1,h2 {
     transform: translateY(0) !important;
     cursor: auto !important;
 }
-.disabledPagination,.disabledPagination:hover,.disabledPagination:active{
+
+.disabledPagination,
+.disabledPagination:hover,
+.disabledPagination:active {
     background-color: var(--muted) !important;
-    cursor:default;
+    cursor: default;
     transform: none !;
 }
 
@@ -552,7 +668,9 @@ h1,h2 {
 .sortBox label:hover {
     color: var(--primaryDark);
 }
-.disabledCheck, .disabledCheck:hover{
+
+.disabledCheck,
+.disabledCheck:hover {
     color: var(--muted) !important;
 }
 
@@ -856,11 +974,13 @@ h1,h2 {
     cursor: pointer;
     transition: background-color 0.3s;
 }
-.disabledReportsBtn{
+
+.disabledReportsBtn {
     background-color: var(--muted) !important;
     color: var(--danger) !important;
     cursor: default !important;
 }
+
 .reportsBtnBox button:hover {
     background-color: var(--primaryDark);
 }
@@ -880,6 +1000,7 @@ h1,h2 {
     width: 10%;
     height: 10%;
 }
+
 .reportSelect {
     width: 35%;
     padding: 10px;

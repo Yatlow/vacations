@@ -12,7 +12,6 @@ if (stored) {
 
         const decoded: { exp: number } = jwtDecode(parsedToken);
         const now = Date.now() / 1000;
-        console.log(decoded.exp,now);
         
 
         if (decoded.exp > now) {
@@ -20,11 +19,11 @@ if (stored) {
         } else {
             localStorage.removeItem("loginData"); 
         }
-        if (isAuth){}
     } catch (err) {
         localStorage.removeItem("loginData");
     }
 }
+
 
 const initialState = !!stored;
 const initialMsgState = "logging out...";
