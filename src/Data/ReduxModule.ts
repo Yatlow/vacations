@@ -20,6 +20,7 @@ if (stored) {
         } else {
             localStorage.removeItem("loginData"); 
         }
+        if (isAuth){}
     } catch (err) {
         localStorage.removeItem("loginData");
     }
