@@ -105,7 +105,7 @@ function LoginView() {
         try {
             const route = `${config.server.url}${config.server.port}/auth/set_new_password`;
             const res= await axios.post(route, body)
-            if (res.data.res.affectedRows>0){
+            if (res.data.res.rowCount>0){
                 state.emailResetMsg="Successfully Changed Password!";
                 setState(prev => ({ ...prev, validOtp:false,uid:""}));
             } 
